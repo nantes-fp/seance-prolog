@@ -6,4 +6,4 @@ slides.html: slides.md
 view: slides.html
 	firefox 'onstage.html#slides.html'
 
-.PHONY: all
+.PHONY: all view
