@@ -1,9 +1,21 @@
-all: slides.html
+markdown = $(shell ls *.md)
+html = $(markdown:.md=.html)
+onstaged = $(html:%=onstage.html\#%)
 
-slides.html: slides.md
-	pandoc -sf markdown -t dzslides slides.md -o slides.html
+all: $(html)
 
-view: slides.html
-	firefox 'onstage.html#slides.html'
+%.html: %.md
+	~/.cabal/bin/pandoc \
+		-Ssf markdown \
+		-t dzslides \
+		--slide-leve 2 \
+		--template template.html \
+		$< \
+		-o $@
+	touch onstage.html
+
+view: $(html)
+	firefox $(onstaged)
+	while :; do inotifywait -qqe modify $(markdown); make; done
 
 .PHONY: all view
